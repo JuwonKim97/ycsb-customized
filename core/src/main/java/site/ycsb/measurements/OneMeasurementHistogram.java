@@ -125,7 +125,7 @@ public class OneMeasurementHistogram extends OneMeasurement {
     exporter.write(getName(), "AverageLatency(us)", mean);
     exporter.write(getName(), "LatencyVariance(us)", variance);
     exporter.write(getName(), "MinLatency(us)", min);
-    //exporter.write(getName(), "MaxLatency(us)", max);
+    exporter.write(getName(), "MaxLatency(us)", max);
 
     long opcounter=0;
     boolean done95th = false;
@@ -134,14 +134,14 @@ public class OneMeasurementHistogram extends OneMeasurement {
     boolean done99dot95th = false;
     for (int i = 0; i < buckets; i++) {
       opcounter += histogram[i];
-      //if ((!done95th) && (((double) opcounter) / ((double) operations) >= 0.95)) {
-      //  exporter.write(getName(), "95thPercentileLatency(us)", i * 1000);
-      //  done95th = true;
-      //}
-      //if (((double) opcounter) / ((double) operations) >= 0.99) {
-      //  exporter.write(getName(), "99thPercentileLatency(us)", i * 1000);
-      //  break;
-      //}
+      if ((!done95th) && (((double) opcounter) / ((double) operations) >= 0.95)) {
+        exporter.write(getName(), "95thPercentileLatency(us)", i * 1000);
+        done95th = true;
+      }
+      if (((double) opcounter) / ((double) operations) >= 0.99) {
+        exporter.write(getName(), "99thPercentileLatency(us)", i * 1000);
+        break;
+      }
       //if ((!done99th) && (((double) opcounter) / ((double) operations) >= 0.99)) {
       //  exporter.write(getName(), "99thPercentileLatency(us)", i * 1000);
       //  done99th = true;
@@ -150,18 +150,19 @@ public class OneMeasurementHistogram extends OneMeasurement {
       //  exporter.write(getName(), "99dot9thPercentileLatency(us)", i * 1000);
       //  done99dot9th = true;
       //}
-      if ((!done99dot9th) && (((double) opcounter) / ((double) operations) >= 0.999)) {
-        exporter.write(getName(), "MaxLatency(us)", i * 1000);
-        done99dot9th = true;
-      }
-      if ((!done99dot95th) && (((double) opcounter) / ((double) operations) >= 0.9995)) {
-        exporter.write(getName(), "95thPercentileLatency(us)", i * 1000);
-        done99dot95th = true;
-      }
-      if (((double) opcounter) / ((double) operations) >= 0.9999) {
-        exporter.write(getName(), "99thPercentileLatency(us)", i * 1000);
-        break;
-      }
+      //if ((!done99dot9th) && (((double) opcounter) / ((double) operations) >= 0.999)) {
+      //  //exporter.write(getName(), "MaxLatency(us)", 123);
+      //  exporter.write(getName(), "MaxLatency(us)", i * 1000);
+      //  done99dot9th = true;
+      //}
+      //if ((!done99dot95th) && (((double) opcounter) / ((double) operations) >= 0.9995)) {
+      //  exporter.write(getName(), "95thPercentileLatency(us)", i * 1000);
+      //  done99dot95th = true;
+      //}
+      //if (((double) opcounter) / ((double) operations) >= 0.9999) {
+      //  exporter.write(getName(), "99thPercentileLatency(us)", i * 1000);
+      //  break;
+      //}
     }
 
     exportStatusCounts(exporter);
