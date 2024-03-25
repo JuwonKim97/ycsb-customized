@@ -35,6 +35,5 @@ updateproportion=0.6
 scanproportion=0
 insertproportion=0
 
-
 requestdistribution=zipfian
 
